@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>주격 관계대명사 퀴즈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563EB;
+    --primary-light: #EFF6FF;
+    --primary-dark: #1E40AF;
+    --success: #059669;
+    --success-light: #ECFDF5;
+    --danger: #DC2626;
+    --danger-light: #FEF2F2;
+    --warning: #D97706;
+    --warning-light: #FFFBEB;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 100%);
+    min-height: 100vh;
+    color: var(--gray-900);
+  }
+  .header {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1.25rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .header-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .header-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .progress-bar {
+    width: 180px;
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #7C3AED);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    font-size: 12px;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-top: 3px;
+    text-align: right;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* START SCREEN */
+  .start-card {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+  }
+  .start-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--primary), #7C3AED);
+    border-radius: 24px;
+    margin: 0 auto 1.5rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem;
+  }
+  .start-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+  }
+  .start-subtitle {
+    font-size: 1rem;
+    color: var(--gray-500);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+  .info-item {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+  }
+  .info-num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .info-label {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+  .btn-start {
+    background: linear-gradient(135deg, var(--primary), #7C3AED);
+    color: white;
+    border: none;
+    padding: 0.875rem 3rem;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.35);
+    letter-spacing: 0.3px;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+  .btn-start:active { transform: translateY(0); }
+
+  /* QUIZ SCREEN */
+  .question-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .q-score {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+  }
+  .question-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.75rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    margin-bottom: 1rem;
+  }
+  .question-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--gray-900);
+    line-height: 1.65;
+    margin-bottom: 0.5rem;
+  }
+  .sentence-box {
+    background: var(--primary-light);
+    border-left: 3px solid var(--primary);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 0.875rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    color: var(--primary-dark);
+    margin: 1rem 0;
+    line-height: 1.6;
+  }
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 0.5rem;
+  }
+  .option-btn {
+    background: white;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 0.875rem 1.125rem;
+    font-size: 0.975rem;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--gray-700);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+  .option-btn:hover:not([disabled]) {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+  }
+  .option-btn .opt-label {
+    width: 28px; height: 28px;
+    background: var(--gray-100);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .option-btn:hover:not([disabled]) .opt-label {
+    background: var(--primary);
+    color: white;
+  }
+  .option-btn.correct {
+    border-color: var(--success);
+    background: var(--success-light);
+    color: var(--success);
+  }
+  .option-btn.correct .opt-label {
+    background: var(--success);
+    color: white;
+  }
+  .option-btn.wrong {
+    border-color: var(--danger);
+    background: var(--danger-light);
+    color: var(--danger);
+  }
+  .option-btn.wrong .opt-label {
+    background: var(--danger);
+    color: white;
+  }
+  .option-btn.muted {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .feedback-box {
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-top: 0.75rem;
+    display: none;
+    animation: fadeIn 0.3s ease;
+    line-height: 1.6;
+    font-size: 0.9rem;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .feedback-box.correct-fb {
+    background: var(--success-light);
+    border: 1px solid #A7F3D0;
+    color: #065F46;
+  }
+  .feedback-box.wrong-fb {
+    background: var(--danger-light);
+    border: 1px solid #FECACA;
+    color: #991B1B;
+  }
+  .feedback-icon { font-size: 1rem; margin-right: 4px; }
+  .feedback-title { font-weight: 700; }
+  .nav-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 1rem;
+  }
+  .btn-next {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: background 0.15s, transform 0.1s;
+    display: none;
+  }
+  .btn-next:hover { background: var(--primary-dark); }
+  .btn-next:active { transform: scale(0.98); }
+
+  /* RESULT SCREEN */
+  .result-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .score-ring {
+    width: 120px; height: 120px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+  }
+  .score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-ring .ring-bg { fill: none; stroke: var(--gray-100); stroke-width: 10; }
+  .score-ring .ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .score-text-wrap {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .score-num {
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .score-denom {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+  }
+  .result-grade {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .result-msg {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .stat-item {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 0.875rem;
+  }
+  .stat-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--gray-500); margin-top: 2px; }
+  .wrong-list-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+  .wrong-list-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--danger);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wrong-item {
+    background: var(--danger-light);
+    border: 1px solid #FECACA;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+  }
+  .wrong-item-q { font-weight: 500; color: var(--gray-900); margin-bottom: 4px; }
+  .wrong-item-ans { color: var(--success); font-size: 0.8rem; margin-top: 4px; }
+  .wrong-item-fb { color: var(--gray-700); font-size: 0.8rem; margin-top: 4px; line-height: 1.5; }
+  .btn-retry {
+    background: linear-gradient(135deg, var(--primary), #7C3AED);
+    color: white;
+    border: none;
+    padding: 0.875rem 2.5rem;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 12px rgba(37,99,235,0.35);
+  }
+  .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-title">
+      📚 <span>주격 관계대명사</span>
+      <span class="header-badge">GRAMMAR</span>
+    </div>
+    <div id="progressWrap" style="display:none">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-text" id="progressText">0 / 15</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- START SCREEN -->
+  <div class="screen active" id="startScreen">
+    <div class="start-card">
+      <div class="start-icon">📖</div>
+      <h1 class="start-title">주격 관계대명사 연습</h1>
+      <p class="start-subtitle">who, which, that의 핵심 개념과 수 일치를<br>완벽하게 다질 수 있는 15문항 퀴즈입니다.</p>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-num">15</div>
+          <div class="info-label">문항 수</div>
+        </div>
+        <div class="info-item">
+          <div class="info-num">4지</div>
+          <div class="info-label">선다형</div>
+        </div>
+        <div class="info-item">
+          <div class="info-num">즉시</div>
+          <div class="info-label">피드백</div>
+        </div>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">퀴즈 시작하기 →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div class="screen" id="quizScreen">
+    <div class="question-meta">
+      <span class="q-number" id="qNumber">QUESTION 1 / 15</span>
+      <span class="q-score" id="qScore">맞은 수: 0</span>
+    </div>
+    <div class="question-card">
+      <div class="question-text" id="questionText"></div>
+      <div class="sentence-box" id="sentenceBox" style="display:none"></div>
+      <div class="options-list" id="optionsList"></div>
+      <div class="feedback-box" id="feedbackBox"></div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">다음 문제 →</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen" id="resultScreen">
+    <div class="result-card">
+      <div class="score-ring">
+        <svg viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="40"/>
+          <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+        </svg>
+        <div class="score-text-wrap">
+          <div class="score-num" id="scoreNum">0</div>
+          <div class="score-denom">/ 15</div>
+        </div>
+      </div>
+      <div class="result-grade" id="resultGrade"></div>
+      <div class="result-msg" id="resultMsg"></div>
+      <div class="result-stats">
+        <div class="stat-item">
+          <div class="stat-val" style="color:var(--success)" id="statCorrect">0</div>
+          <div class="stat-label">✅ 맞은 문제</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" style="color:var(--danger)" id="statWrong">0</div>
+          <div class="stat-label">❌ 틀린 문제</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val" style="color:var(--primary)" id="statPercent">0%</div>
+          <div class="stat-label">📊 정답률</div>
+        </div>
+      </div>
+      <button class="btn-retry" onclick="retryQuiz()">🔄 다시 풀기</button>
+    </div>
+    <div class="wrong-list-card" id="wrongListCard" style="display:none">
+      <div class="wrong-list-title">❌ 틀린 문제 해설</div>
+      <div id="wrongList"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q: '다음 빈칸에 들어갈 말로 가장 적절한 것을 고르세요.',
+    sentence: '"I have a friend _______ speaks three languages."',
+    options: ['who', 'which', 'whom', 'whose'],
+    answer: 0,
+    feedback: '선행사가 사람(a friend)이고, 뒤에 동사(speaks)가 이어지므로 주격 관계대명사 who가 와야 합니다.'
+  },
+  {
+    q: '다음 빈칸에 들어갈 말로 가장 적절한 것을 고르세요.',
+    sentence: '"This is the book _______ won the prize last year."',
+    options: ['who', 'which', 'whom', 'what'],
+    answer: 1,
+    feedback: '선행사가 사물(the book)이고 뒤에 바로 동사(won)가 나오므로 주격 관계대명사 which가 알맞습니다.'
+  },
+  {
+    q: '다음 두 문장을 한 문장으로 올바르게 연결한 것을 고르세요.\n• Look at the dog. / It is sleeping under the tree.',
+    sentence: null,
+    options: [
+      'Look at the dog who is sleeping under the tree.',
+      'Look at the dog which is sleeping under the tree.',
+      'Look at the dog whom is sleeping under the tree.',
+      'Look at the dog what is sleeping under the tree.'
+    ],
+    answer: 1,
+    feedback: "두 번째 문장의 주어 'It'이 선행사인 동물(the dog)을 가리키므로, 동물용 주격 관계대명사 which(또는 that)로 바꾸어 연결해야 합니다."
+  },
+  {
+    q: '다음 문장의 빈칸에 들어갈 동사의 형태로 가장 적절한 것을 고르세요.',
+    sentence: '"Tom likes the stories that _______ written by hands."',
+    options: ['is', 'are', 'was', 'be'],
+    answer: 1,
+    feedback: '주격 관계대명사 뒤의 동사는 선행사에 수를 일치시킵니다. 선행사인 the stories가 복수이므로 복수 동사인 are가 정답입니다.'
+  },
+  {
+    q: '다음 중 밑줄 친 부분의 쓰임이 어색한 문장을 고르세요.',
+    sentence: null,
+    options: [
+      'The boy who lives next door is a baker.',
+      'I have a friend that speaks five languages.',
+      'He is the teacher which teaches us English.',
+      'They are looking for a house that has a big garden.'
+    ],
+    answer: 2,
+    feedback: '③번 문장의 선행사는 사람(the teacher)이므로 사물에 쓰는 which가 아니라 who 또는 that을 써야 올바릅니다.'
+  },
+  {
+    q: '다음 빈칸에 who와 which 대신 공통으로 쓸 수 있는 관계대명사를 고르세요.',
+    sentence: null,
+    options: ['that', 'what', 'whose', 'as'],
+    answer: 0,
+    feedback: 'that은 선행사가 사람, 동물, 사물일 때 모두 주어/목적어 역할을 대신할 수 있는 만능 관계대명사입니다.'
+  },
+  {
+    q: '다음 빈칸에 들어갈 말로 가장 적절한 것을 고르세요.',
+    sentence: '"Where is the bus _______ goes to the city hall?"',
+    options: ['who', 'whom', 'that', 'whose'],
+    answer: 2,
+    feedback: '선행사가 사물(the bus)이고 뒤에 바로 동사(goes)가 이어지므로 주격 관계대명사로 which 또는 that을 쓸 수 있습니다.'
+  },
+  {
+    q: "다음 중 문장의 빈칸에 'who'를 사용할 수 없는 것을 고르세요.",
+    sentence: null,
+    options: [
+      'The girl _______ is dancing on the stage is my sister.',
+      'I know the man _______ wrote this book.',
+      'The computer _______ is on the desk is new.',
+      'People _______ exercise regularly are healthy.'
+    ],
+    answer: 2,
+    feedback: '③번 문장의 선행사는 사물(The computer)이므로 사람에게 쓰는 who가 아니라 which나 that을 사용해야 합니다.'
+  },
+  {
+    q: '다음 두 문장을 주격 관계대명사를 사용하여 한 문장으로 연결할 때 빈칸에 알맞은 동사를 고르세요.\n• I met a girl. / She _______ beautiful eyes.',
+    sentence: null,
+    options: ['have', 'has', 'having', 'is'],
+    answer: 1,
+    feedback: "완성될 문장은 'I met a girl who [빈칸] beautiful eyes.'입니다. 선행사(a girl)가 3인칭 단수이므로 관계대명사절의 동사도 단수형인 has가 되어야 합니다."
+  },
+  {
+    q: '다음 빈칸에 들어갈 말로 가장 적절한 것을 고르세요.',
+    sentence: '"She is the scientist _______ discovered a new vaccine."',
+    options: ['which', 'who', 'whom', 'whose'],
+    answer: 1,
+    feedback: '선행사가 사람(the scientist)이고 뒤에 동사(discovered)가 이어지므로 주격 관계대명사 who가 와야 합니다.'
+  },
+  {
+    q: '다음 빈칸에 들어갈 말이 순서대로 올바르게 짝지어진 것을 고르세요.\n• The actors _______ performed in the play were great.\n• I bought a camera _______ was made in Korea.',
+    sentence: null,
+    options: ['who - which', 'which - who', 'who - who', 'which - which'],
+    answer: 0,
+    feedback: '첫 번째 문장은 사람 선행사(The actors)이므로 who, 두 번째 문장은 사물 선행사(a camera)이므로 which가 적절합니다.'
+  },
+  {
+    q: '다음 중 밑줄 친 관계대명사의 쓰임이 나머지와 다른 하나를 고르세요.',
+    sentence: null,
+    options: [
+      'The man who lives next door is a doctor.',
+      'I know a girl who won the contest.',
+      'This is the house which my uncle built.',
+      'The dog which is barking is mine.'
+    ],
+    answer: 2,
+    feedback: '①②④는 주격 관계대명사(선행사 뒤에서 주어 역할)이고, ③의 which는 목적격 관계대명사(built의 목적어 역할)입니다. 주격은 관계대명사 뒤에 동사가 바로 오고, 목적격은 관계대명사 뒤에 주어+동사가 옵니다.'
+  },
+  {
+    q: '다음 문장에서 어법상 어색한 부분을 찾아 바르게 고친 것을 고르세요.',
+    sentence: '"He loves books who tell stories about history."',
+    options: ['who → which', 'books → book', 'tells → telling', 'about → for'],
+    answer: 0,
+    feedback: '선행사인 books는 사람이 아닌 사물이므로 주격 관계대명사 who를 which(또는 that)로 고쳐주어야 합니다.'
+  },
+  {
+    q: '다음 문장의 빈칸에 가장 알맞은 동사 형태를 고르세요.',
+    sentence: '"The students who _______ cleaning the classroom are very kind."',
+    options: ['is', 'are', 'was', 'am'],
+    answer: 1,
+    feedback: '주격 관계대명사 뒤의 동사는 선행사의 수에 일치시킵니다. 선행사가 복수명사(The students)이므로 복수 동사인 are가 알맞습니다.'
+  },
+  {
+    q: "다음 두 문장을 관계대명사 'that'을 사용한 한 문장으로 결합할 때, 올바른 문장을 고르세요.\n• The bakery sells bread. / It tastes delicious.",
+    sentence: null,
+    options: [
+      'The bakery sells bread that tastes delicious.',
+      'The bakery sells bread that it tastes delicious.',
+      'The bakery that sells bread tastes delicious.',
+      'The bakery sells bread tastes delicious that.'
+    ],
+    answer: 0,
+    feedback: '사물 선행사인 bread를 수식하는 주격 관계대명사 자리에 대명사 주어(It)를 지우고 that을 넣어야 합니다. ②번처럼 대명사 it을 한 번 더 쓰면 중복 오류가 됩니다.'
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let wrongAnswers = [];
+let answered = false;
+
+const labels = ['①', '②', '③', '④'];
+
+function startQuiz() {
+  currentQ = 0; score = 0; wrongAnswers = []; answered = false;
+  document.getElementById('progressWrap').style.display = 'block';
+  showScreen('quizScreen');
+  renderQuestion();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateProgress() {
+  const pct = (currentQ / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = currentQ + ' / ' + questions.length;
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  document.getElementById('qNumber').textContent = 'QUESTION ' + (currentQ + 1) + ' / ' + questions.length;
+  document.getElementById('qScore').textContent = '맞은 수: ' + score;
+  updateProgress();
+
+  const qText = document.getElementById('questionText');
+  qText.innerHTML = q.q.replace(/\n/g, '<br>');
+
+  const sentBox = document.getElementById('sentenceBox');
+  if (q.sentence) {
+    sentBox.style.display = 'block';
+    sentBox.textContent = q.sentence;
+  } else {
+    sentBox.style.display = 'none';
+  }
+
+  const optList = document.getElementById('optionsList');
+  optList.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-label">${labels[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    optList.appendChild(btn);
+  });
+
+
+  multiSelected = [];
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('feedbackBox').className = 'feedback-box';
+  document.getElementById('btnNext').style.display = 'none';
+}
+
+let multiSelected = [];
+
+function toggleMulti(idx) {
+  if (answered) return;
+  const buttons = document.querySelectorAll('.option-btn');
+  const btn = buttons[idx];
+  if (multiSelected.includes(idx)) {
+    multiSelected = multiSelected.filter(i => i !== idx);
+    btn.classList.remove('selected-multi');
+    btn.querySelector('.opt-label').style.background = '';
+    btn.querySelector('.opt-label').style.color = '';
+    btn.style.borderColor = '';
+    btn.style.background = '';
+  } else {
+    multiSelected.push(idx);
+    btn.classList.add('selected-multi');
+    btn.querySelector('.opt-label').style.background = '#2563EB';
+    btn.querySelector('.opt-label').style.color = 'white';
+    btn.style.borderColor = '#2563EB';
+    btn.style.background = '#EFF6FF';
+  }
+}
+
+function submitMulti() {
+  if (answered || multiSelected.length === 0) return;
+  answered = true;
+  const q = questions[currentQ];
+  const buttons = document.querySelectorAll('.option-btn');
+  const correctSet = q.answer.slice().sort().join(',');
+  const chosenSet = multiSelected.slice().sort().join(',');
+  const isCorrect = correctSet === chosenSet;
+  if (isCorrect) score++;
+  else wrongAnswers.push({ q: currentQ, chosen: multiSelected.slice() });
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (q.answer.includes(i)) btn.classList.add('correct');
+    else if (multiSelected.includes(i) && !q.answer.includes(i)) btn.classList.add('wrong');
+    else btn.classList.add('muted');
+    btn.querySelector('.opt-label').style.background = '';
+    btn.querySelector('.opt-label').style.color = '';
+    btn.style.borderColor = '';
+    btn.style.background = '';
+  });
+  const confirmBtn = document.getElementById('confirmMulti');
+  if (confirmBtn) confirmBtn.style.display = 'none';
+
+  const fb = document.getElementById('feedbackBox');
+  fb.style.display = 'block';
+  const correctLabels = q.answer.map(i => labels[i] + ' ' + q.options[i]).join(', ');
+  if (isCorrect) {
+    fb.className = 'feedback-box correct-fb';
+    fb.innerHTML = `<span class="feedback-icon">✅</span><span class="feedback-title">정답입니다!</span><br><span>${q.feedback}</span>`;
+  } else {
+    fb.className = 'feedback-box wrong-fb';
+    fb.innerHTML = `<span class="feedback-icon">❌</span><span class="feedback-title">오답입니다.</span> 정답은 <strong>${correctLabels}</strong>입니다.<br><span>${q.feedback}</span>`;
+  }
+  const btnNext = document.getElementById('btnNext');
+  btnNext.style.display = 'block';
+  btnNext.textContent = currentQ < questions.length - 1 ? '다음 문제 →' : '결과 보기 →';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const buttons = document.querySelectorAll('.option-btn');
+  const isCorrect = idx === q.answer;
+  if (isCorrect) score++;
+  else wrongAnswers.push({ q: currentQ, chosen: idx });
+
+  buttons.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.answer) btn.classList.add('correct');
+    else if (i === idx && !isCorrect) btn.classList.add('wrong');
+    else btn.classList.add('muted');
+  });
+
+  const fb = document.getElementById('feedbackBox');
+  fb.style.display = 'block';
+  if (isCorrect) {
+    fb.className = 'feedback-box correct-fb';
+    fb.innerHTML = `<span class="feedback-icon">✅</span><span class="feedback-title">정답입니다!</span><br><span>${q.feedback}</span>`;
+  } else {
+    fb.className = 'feedback-box wrong-fb';
+    fb.innerHTML = `<span class="feedback-icon">❌</span><span class="feedback-title">오답입니다.</span> 정답은 <strong>${labels[q.answer]} ${q.options[q.answer]}</strong>입니다.<br><span>${q.feedback}</span>`;
+  }
+
+  const btnNext = document.getElementById('btnNext');
+  btnNext.style.display = 'block';
+  btnNext.textContent = currentQ < questions.length - 1 ? '다음 문제 →' : '결과 보기 →';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= questions.length) showResult();
+  else renderQuestion();
+}
+
+function showResult() {
+  updateProgress();
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressText').textContent = '15 / 15';
+  showScreen('resultScreen');
+
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent = questions.length - score;
+  document.getElementById('statPercent').textContent = Math.round((score / questions.length) * 100) + '%';
+
+  const pct = score / questions.length;
+  let grade, msg, color;
+  if (pct === 1) { grade = '🏆 만점!'; msg = '완벽합니다! 주격 관계대명사를 완전히 마스터했어요.'; color = '#059669'; }
+  else if (pct >= 0.8) { grade = '🥇 우수!'; msg = '정말 잘하셨어요! 몇 가지만 더 다듬으면 완벽해요.'; color = '#2563EB'; }
+  else if (pct >= 0.6) { grade = '🥈 양호'; msg = '절반 이상 맞혔어요. 틀린 문제를 다시 복습해보세요!'; color = '#D97706'; }
+  else { grade = '📝 분발 필요'; msg = '주격 관계대명사 개념을 다시 한번 꼼꼼히 공부해보세요.'; color = '#DC2626'; }
+
+  document.getElementById('resultGrade').textContent = grade;
+  document.getElementById('resultGrade').style.color = color;
+  document.getElementById('resultMsg').textContent = msg;
+
+  const circumference = 2 * Math.PI * 40;
+  const offset = circumference * (1 - pct);
+  const ring = document.getElementById('ringFill');
+  ring.style.stroke = color;
+  ring.style.strokeDashoffset = circumference;
+  setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
+
+  if (wrongAnswers.length > 0) {
+    const card = document.getElementById('wrongListCard');
+    card.style.display = 'block';
+    const list = document.getElementById('wrongList');
+    list.innerHTML = '';
+    wrongAnswers.forEach(w => {
+      const q = questions[w.q];
+      const el = document.createElement('div');
+      el.className = 'wrong-item';
+      el.innerHTML = `
+        <div class="wrong-item-q">Q${w.q + 1}. ${q.q.replace(/\n/g, ' | ')}</div>
+        ${q.sentence ? `<div style="font-size:0.78rem;color:#6B7280;margin:3px 0;">${q.sentence}</div>` : ''}
+        <div style="color:#DC2626;font-size:0.8rem;">내 답: ${Array.isArray(w.chosen) ? w.chosen.map(i=>labels[i]+' '+q.options[i]).join(', ') : labels[w.chosen]+' '+q.options[w.chosen]}</div>
+        <div class="wrong-item-ans">정답: ${Array.isArray(q.answer) ? q.answer.map(i=>labels[i]+' '+q.options[i]).join(', ') : labels[q.answer]+' '+q.options[q.answer]}</div>
+        <div class="wrong-item-fb">💡 ${q.feedback}</div>
+      `;
+      list.appendChild(el);
+    });
+  } else {
+    document.getElementById('wrongListCard').style.display = 'none';
+  }
+}
+
+function retryQuiz() {
+  startQuiz();
+}
+</script>
+</body>
+</html>
